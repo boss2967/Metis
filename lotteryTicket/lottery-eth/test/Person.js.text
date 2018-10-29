@@ -1,0 +1,30 @@
+const assert = require('assert')
+
+class Person {
+    say(){
+         return  "halleowlr"
+
+    }
+    leg(){
+         return 2
+
+    }
+}
+
+it('测试Perons say方法',()=>{
+     const p1 = new Person()
+    assert.equal(p1.say(),"-------------------adf-",'asdfasdf')
+
+})
+it('测试legf方法',  ()=> {
+     const p1 = new Person()
+    assert.equal( p1.leg(),'nihao','legs应该返回2')
+});
+
+// descripe 是对测试的it进行分组
+
+beforeEach(()=>{
+    console.log("床啊金皮");
+    p1 = new Person()
+
+})
