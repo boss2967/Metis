@@ -1,0 +1,46 @@
+//1. 	创建交易结构
+type Transaction struct {
+	TXID      []byte     //交易ID
+	TXInputs  []TXInput  //交易输入数组,可能是多个
+	TXOutputs []TXOutput //交易输出数组，可能是多个
+
+}
+//输入input
+type TXInput struct {
+	TXID  []byte //引用的交易id
+	Index int64  // 引用的output的索引值
+	Sig   string //签名,解锁脚本，我们用地址来模拟
+}
+// 设置交易ID
+func (tx *Transaction) SetHash() {
+	var buffer bytes.Buffer //bytes类型缓冲区
+	//01.	生成编码器
+	encoder := gob.NewEncoder(&buffer)
+	//02.	编码
+	err := encoder.Encode(&tx)
+	// nil
+	if err != nil {
+		log.Panic("设置id出错：", err)
+	}
+	//buffer.bytes
+	data := buffer.Bytes()
+	//hash 256
+	hash := sha256.Sum256(data)
+	//数组转切片
+	tx.TXID = hash[:]
+}
+
+
+//实现一个函数，判断当前的交易是否为挖矿交易,判断是否挖矿交易
+func (tx *Transaction) IsCoinbase() bool {
+	//1.	交易input只有一个
+	if len(tx.TXInputs) == 1 {
+		input := tx.TXInputs[0]
+		//2.	交易id为空
+		//3.	交易的index为空 -1
+		if !bytes.Equal(input.TXID, []byte{}) || input.Index != -1 {
+			return false
+		}
+	}
+	return true
+}
